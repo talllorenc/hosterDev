@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="max-w-[700px] mx-auto mt-[150px] flex flex-col items-center p-4">
+    <div className="max-w-[700px] mx-auto mt-[30px] in:mt-[150px] flex flex-col items-center p-4">
       <div className="flex flex-col items-center text-center mb-8">
         <Image
           src="/main-logo.svg"
