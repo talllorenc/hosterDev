@@ -6,6 +6,7 @@ import GlobalSearch from "../GlobalSearch/GlobalSearch";
 import LoginButton from "../LoginButton/LoginButton";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import SignupButton from "../SignupButton/SignupButton";
 
 const links = [
   {
@@ -77,6 +78,7 @@ const Navbar = () => {
       <div className="hidden md:flex items-center gap-4">
         <GlobalSearch />
         <LoginButton />
+        <SignupButton/>
       </div>
     </nav>
   );

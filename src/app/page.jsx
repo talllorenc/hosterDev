@@ -17,15 +17,15 @@ export default function Home() {
           Добро пожаловать в hosterDEV! Здесь вы найдете решения и идеи,
           созданные нашими разработчиками. Обменивайтесь
           знаниями, исследуйте новые подходы и вдохновляйтесь для достижения
-          великих результатов вместе.
+          новых результатов вместе.
         </span>
         <Link href="/add_solution" className="p-2 border-2 font-bold rounded-full text-white hover:bg-white hover:text-black hover:border-black mt-2">Добавить решение</Link>
       </div>
 
       <div className="flex flex-col gap-4 border border-zinc-700 rounded-lg p-4 max-w-[400px] w-full">
-        <a href="https://siter.kz/" target="_blank" className="text-center p-4 bg-white rounded-lg text-black white-shadow hover:bg-zinc-300">Siter.kz</a>
-        <a href="https://hoster.kz/" target="_blank" className="text-center p-4 bg-white rounded-lg text-black white-shadow hover:bg-zinc-300">Hoster.kz</a>
-        <Link href="/login" className="text-center p-2 border-2 hover:border-zinc-400 hover:text-zinc-400">Войти</Link>
+        <a href="https://siter.kz/" target="_blank" className="text-center p-4 bg-[#2378be] rounded-lg text-white font-bold white-shadow hover:opacity-90">Siter.kz</a>
+        <a href="https://hoster.kz/" target="_blank" className="text-center p-4 bg-orange-600 rounded-lg text-white font-bold white-shadow hover:opacity-90">Hoster.kz</a>
+        <Link href="/login" className="text-center p-2 border-2 hover:opacity-60">Войти</Link>
       </div>
     </div>
   );
