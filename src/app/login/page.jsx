@@ -4,7 +4,6 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
-// import { useRouter } from "next/router";
 
 
 const basicSchema = yup.object().shape({
@@ -13,6 +12,7 @@ const basicSchema = yup.object().shape({
 });
 
 const onSubmit = async (values, actions) => {
+
   try {
     const response = await fetch('http://localhost:8080/auth/login', {
       method: 'POST',
@@ -34,14 +34,14 @@ const onSubmit = async (values, actions) => {
     const userData = await response.json();
 
     localStorage.setItem('token', userData.token);
+    
+    window.location.href = '/';
   } catch (error) {
     console.error('Ошибка:', error);
   }
 };
 
 const Login = () => {
-// const router = useRouter();
-
   const {
     values,
     handleChange,

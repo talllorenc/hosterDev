@@ -24,7 +24,7 @@ const links = [
 ];
 
 const Navbar = () => {
-  const {user, logout} = useContext(UserContext)
+  const { user, logout } = useContext(UserContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -85,11 +85,13 @@ const Navbar = () => {
       <div className="hidden md:flex items-center gap-4">
         <GlobalSearch />
         {user ? (
-          <div onClick={logout}>{user.name}</div>
-        ) : (
-          <div className="hidden md:flex items-center gap-4">
-            <LoginButton />
+          <div className="w-full ">
+            <div className="font-bold border-b-2 border-[#2378be] cursor-pointer">
+              <Link href="/profile">{user.name}</Link>
+            </div>
           </div>
+        ) : (
+          <LoginButton />
         )}
       </div>
     </nav>
