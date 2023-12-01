@@ -6,14 +6,19 @@ import Image from "next/image";
 import Link from "next/link";
 
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+const loginRules = /^[A-Za-z0-9]+$/;
+const nameRules = /^[А-Яа-я\s]+$/;
 
 const basicSchema = yup.object().shape({
-  email: yup
+  login: yup
     .string()
-    .email("Некоректный формат email")
+    .min(6, "Логин должен быть длиннее 6 символов")
+    .matches(loginRules, { message: "Только латинские символы" })
     .required("Обязательное поле"),
-  login: yup.string().min(6, "Логин должен быть длиннее 6 символов").required("Обязательное поле"),
-  name: yup.string().required("Обязательное поле"),
+  name: yup
+    .string()
+    .matches(nameRules, { message: "Только кириллические символы" })
+    .required("Обязательное поле"),
   position: yup.string().required("Обязательное поле"),
   password: yup
     .string()
@@ -28,32 +33,51 @@ const basicSchema = yup.object().shape({
     .required("Обязательное поле"),
 });
 
-const onSubmit = (values, actions) => {
-  console.log("submited");
-  actions.resetForm();
+const onSubmit = async (values, actions) => {
+  try {
+    const response = await fetch('http://localhost:8080/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        login: values.login,
+        name: values.name,
+        position: values.position,
+        password: values.password,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Ошибка регистрации:', errorData.message);
+      return;
+    }
+
+    const userData = await response.json();
+
+    localStorage.setItem('token', userData.token);
+    localStorage.setItem('user', JSON.stringify(userData));
+
+    window.location.href = '/';
+  } catch (error) {
+    console.error('Ошибка:', error);
+  }
 };
 
 const Registration = () => {
-  const {
-    values,
-    handleChange,
-    isSubmitting,
-    touched,
-    handleBlur,
-    handleSubmit,
-    errors,
-  } = useFormik({
-    initialValues: {
-      // email: "",
-      login: "",
-      name: "",
-      position: "",
-      password: "",
-      confirmPassword: "",
-    },
-    validationSchema: basicSchema,
-    onSubmit,
-  });
+  const { values, handleChange, touched, handleBlur, handleSubmit, errors } =
+    useFormik({
+      initialValues: {
+        login: "",
+        name: "",
+        position: "",
+        password: "",
+        confirmPassword: "",
+      },
+      validationSchema: basicSchema,
+      onSubmit,
+    });
 
   return (
     <div className="fixed inset-0 bg-black flex justify-center items-center">
@@ -74,25 +98,6 @@ const Registration = () => {
           </h2>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col">
-          {/* {errors.email && touched.email && (
-            <p className="font-bold text-rose-500 text-center text-[14px]">
-              {errors.email}
-            </p>
-          )}
-          <input
-            value={values.email}
-            onChange={handleChange}
-            type="email"
-            id="email"
-            placeholder="Введите адрес электронной почты"
-            className={
-              errors.email && touched.email
-                ? "border-red-500 focus:outline-none border-2 border-rose bg-black p-2 rounded-full"
-                : "mt-[21px] focus:outline-none border-2 border-white bg-black p-2 rounded-full"
-            }
-            onBlur={handleBlur}
-          /> */}
-
           {errors.login && touched.login && (
             <p className="font-bold text-rose-500 text-center text-[14px]">
               {errors.login}
@@ -107,7 +112,7 @@ const Registration = () => {
             className={
               errors.login && touched.login
                 ? "border-red-500 focus:outline-none border-2 border-rose bg-black p-2 rounded-full"
-                : "mt-[21px] focus:outline-none border-2 border-white bg-black p-2 rounded-full"
+                : "focus:outline-none border-2 border-white bg-black p-2 rounded-full mt-[21px]"
             }
             onBlur={handleBlur}
           />
@@ -126,7 +131,7 @@ const Registration = () => {
             className={
               errors.name && touched.name
                 ? "border-red-500 focus:outline-none border-2 border-rose bg-black p-2 rounded-full"
-                : "mt-[21px] focus:outline-none border-2 border-white bg-black p-2 rounded-full"
+                : "focus:outline-none border-2 border-white bg-black p-2 rounded-full mt-[21px]"
             }
             onBlur={handleBlur}
           />
@@ -139,12 +144,11 @@ const Registration = () => {
           <select
             value={values.position}
             onChange={handleChange}
-            name="position"
             id="position"
             className={
-              errors.name && touched.name
+              errors.position && touched.position
                 ? "border-red-500 focus:outline-none border-2 border-rose bg-black p-2 rounded-full"
-                : "mt-[21px] focus:outline-none border-2 border-white bg-black p-2 rounded-full"
+                : "focus:outline-none border-2 border-white bg-black p-2 rounded-full mt-[21px]"
             }
           >
             <option>Выберите должность</option>
@@ -194,7 +198,6 @@ const Registration = () => {
             onBlur={handleBlur}
           />
           <button
-            disabled={isSubmitting}
             type="submit"
             className="bg-[#2378be] mt-[21px] p-2 font-bold hover:opacity-90 rounded-lg"
           >

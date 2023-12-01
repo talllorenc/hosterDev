@@ -1,11 +1,15 @@
 import Link from "next/link";
 
-const LoginButton = ({closeMenu}) => {
+const LoginButton = ({ closeMenu }) => {
   return (
-    <div onClick={closeMenu} className="border p-1 rounded-lg hover:border-zinc-400 hover:text-zinc-400 w-fit">
-        <Link href="/login" className="">Войти</Link>
-    </div>
-  )
-}
+    <Link
+      href="/login"
+      onClick={closeMenu}
+      className="border-2 py-1 px-4 rounded-full font-bold hover:bg-white hover:text-black hover:border-white w-fit"
+    >
+      Войти
+    </Link>
+  );
+};
 
-export default LoginButton
+export default LoginButton;

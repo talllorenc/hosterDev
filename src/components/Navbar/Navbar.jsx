@@ -5,8 +5,10 @@ import Image from "next/image";
 import GlobalSearch from "../GlobalSearch/GlobalSearch";
 import LoginButton from "../LoginButton/LoginButton";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
 import SignupButton from "../SignupButton/SignupButton";
+import isAuth from "../../hooks/isAuth";
+import { useContext } from "react";
+import { UserContext } from "@/context/UserContext/UserContext";
 
 const links = [
   {
@@ -22,7 +24,7 @@ const links = [
 ];
 
 const Navbar = () => {
-  const pathname = usePathname();
+  const {user, logout} = useContext(UserContext)
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -61,13 +63,18 @@ const Navbar = () => {
           } p-8 text-[20px] gap-4 left-0 w-[420px] top-[72px] absolute bg-black border-r border-[#4c4b4b] h-screen backdrop-blur md:hidden`}
         >
           {links.map((link) => (
-            <Link onClick={closeMenu} key={link.id} href={link.url} className=" md:hidden">
+            <Link
+              onClick={closeMenu}
+              key={link.id}
+              href={link.url}
+              className=" md:hidden"
+            >
               <span className="text-white hover:text-gray-300">
                 {link.title}
               </span>
             </Link>
           ))}
-          <LoginButton closeMenu={closeMenu}/>
+          <LoginButton closeMenu={closeMenu} />
         </div>
         {links.map((link) => (
           <Link key={link.id} href={link.url} className="hidden md:flex">
@@ -77,8 +84,13 @@ const Navbar = () => {
       </div>
       <div className="hidden md:flex items-center gap-4">
         <GlobalSearch />
-        <LoginButton />
-        <SignupButton/>
+        {user ? (
+          <div onClick={logout}>{user.name}</div>
+        ) : (
+          <div className="hidden md:flex items-center gap-4">
+            <LoginButton />
+          </div>
+        )}
       </div>
     </nav>
   );

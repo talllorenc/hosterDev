@@ -48,7 +48,7 @@ const LeftMenuTop = () => {
           className={`${isMenuOpen ? "rotate-90" : ""}`}
         />
 
-        <span className="text-[18px]">Menu</span>
+        <span className="text-[18px]">Меню</span>
       </div>
 
       <div

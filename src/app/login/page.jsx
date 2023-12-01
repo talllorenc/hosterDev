@@ -4,18 +4,44 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
+// import { useRouter } from "next/router";
+
 
 const basicSchema = yup.object().shape({
   login: yup.string().required("Обязательное поле"),
   password: yup.string().required("Обязательное поле"),
 });
 
-const onSubmit = (actions) => {
-  console.log("submited");
-  actions.resetForm();
+const onSubmit = async (values, actions) => {
+  try {
+    const response = await fetch('http://localhost:8080/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        login: values.login,
+        password: values.password,
+      }),
+    });
+
+    if(!response.ok){
+      const errorData = await response.json();
+      console.error('Ошибка авторизации:', errorData.message);
+      return;
+    }
+
+    const userData = await response.json();
+
+    localStorage.setItem('token', userData.token);
+  } catch (error) {
+    console.error('Ошибка:', error);
+  }
 };
 
 const Login = () => {
+// const router = useRouter();
+
   const {
     values,
     handleChange,
